@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Read environment variables
-require('dotenv').config({ path: '.env.local' });
+require('dotenv').config({ path: '../.env.local' });
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -36,8 +36,8 @@ if (typeof module !== 'undefined' && module.exports) {
     window.SUPABASE_CONFIG = SUPABASE_CONFIG;
 }`;
 
-// Write the config file
-fs.writeFileSync('supabase-config.js', configContent);
+// Write the config file (in the same directory as this script)
+fs.writeFileSync('./supabase-config.js', configContent);
 
 console.log('✅ Built supabase-config.js from environment variables');
 console.log('📁 You can now deploy your static files');

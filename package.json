@@ -4,7 +4,7 @@
   "description": "Premium print shop website for Parcel Print Co.",
   "main": "index.html",
   "scripts": {
-    "build": "node build-with-env.js",
+    "build": "node public/build-with-env.js",
     "dev": "python -m http.server 8000",
     "start": "python -m http.server 8000"
   },
