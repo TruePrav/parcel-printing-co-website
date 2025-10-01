@@ -1,15 +1,14 @@
 // Supabase Configuration (Built from environment variables)
 const SUPABASE_CONFIG = {
-    url: 'YOUR_SUPABASE_URL_HERE',
-    anonKey: 'YOUR_SUPABASE_ANON_KEY_HERE',
+    url: 'https://xxcugztoedvvvfuzkkld.supabase.co',
+    anonKey: 'sb_publishable_VJSOyeL0X95TE1X84Cdwdw_JTV689aD',
     tables: {
         adminUsers: 'admin_users',
         adminSessions: 'admin_sessions'
     }
 };
 
-// ⚠️ WARNING: This file contains placeholder values!
-// For production, use the build-with-env.js script to inject real values from .env.local
+console.log('Supabase config loaded from environment variables');
 
 // Export for use in other files
 if (typeof module !== 'undefined' && module.exports) {
