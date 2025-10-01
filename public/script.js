@@ -9,11 +9,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
     
+    console.log('Hamburger element:', hamburger);
+    console.log('Nav menu element:', navMenu);
+    
     if (hamburger && navMenu) {
         hamburger.addEventListener('click', function() {
+            console.log('Hamburger clicked!');
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
+            console.log('Hamburger classes:', hamburger.className);
+            console.log('Nav menu classes:', navMenu.className);
         });
+    } else {
+        console.error('Hamburger or nav menu not found!');
+        console.log('Hamburger:', hamburger);
+        console.log('Nav menu:', navMenu);
     }
     
     // Close mobile menu when clicking on a link
@@ -23,6 +33,16 @@ document.addEventListener('DOMContentLoaded', function() {
             navMenu.classList.remove('active');
         }
     }));
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(event) {
+        if (hamburger && navMenu && navMenu.classList.contains('active')) {
+            if (!hamburger.contains(event.target) && !navMenu.contains(event.target)) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+        }
+    });
     
     // Smooth scrolling for navigation links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {

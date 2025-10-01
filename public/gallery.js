@@ -21,6 +21,16 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }));
     
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(event) {
+        if (hamburger && navMenu && navMenu.classList.contains('active')) {
+            if (!hamburger.contains(event.target) && !navMenu.contains(event.target)) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+        }
+    });
+    
     // Gallery data - this would typically come from a database or API
     const galleryData = [
         // Original numbered images (PNG files)

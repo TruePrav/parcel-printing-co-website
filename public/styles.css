@@ -252,6 +252,7 @@ p {
     border-bottom: 3px solid var(--accent-green);
     margin-bottom: 2rem;
     box-shadow: 0 4px 20px rgba(44, 44, 44, 0.1);
+    padding-top: 20px; /* Add top padding to prevent cutoff */
 }
 
 /* Hero Carousel */
@@ -1220,26 +1221,30 @@ section {
     }
     
     .nav-menu {
-        position: fixed;
-        left: -100%;
-        top: 60px;
-        flex-direction: column;
-        background-color: rgba(250, 248, 245, 0.98);
-        width: 100%;
-        text-align: center;
-        transition: 0.3s;
-        box-shadow: 0 10px 27px rgba(44, 44, 44, 0.1);
-        backdrop-filter: blur(10px);
-        padding: 2rem 0;
-        z-index: 9998;
+        position: fixed !important;
+        left: -100% !important;
+        top: 60px !important;
+        flex-direction: column !important;
+        background-color: rgba(250, 248, 245, 0.98) !important;
+        width: 100% !important;
+        text-align: center !important;
+        transition: left 0.3s ease !important;
+        box-shadow: 0 10px 27px rgba(44, 44, 44, 0.1) !important;
+        backdrop-filter: blur(10px) !important;
+        padding: 2rem 0 !important;
+        z-index: 9998 !important;
+        height: calc(100vh - 60px) !important;
+        overflow-y: auto !important;
     }
 
     .nav-menu.active {
-        left: 0;
+        left: 0 !important;
     }
 
     .hamburger {
-        display: flex;
+        display: flex !important;
+        z-index: 9999 !important;
+        position: relative !important;
     }
 
     .hamburger.active .bar:nth-child(2) {
@@ -1319,11 +1324,34 @@ section {
 
     .hero-content {
         padding: 0 15px;
+        margin-top: 20px; /* Add margin to push content down from navbar */
     }
     
     /* Ensure hero section doesn't overlap navbar */
     .hero {
         margin-top: 0;
+        padding-top: 30px; /* Extra padding on mobile */
+        min-height: 60vh; /* Ensure enough height for content */
+    }
+    
+    /* Adjust hero title for mobile readability */
+    .hero-title {
+        font-size: clamp(2.5rem, 8vw, 4rem);
+        line-height: 1.1;
+        margin-bottom: 1rem;
+        padding-top: 10px; /* Extra spacing from top */
+    }
+    
+    /* Adjust hero subtitle for mobile */
+    .hero-subtitle {
+        font-size: 1.1rem;
+        line-height: 1.4;
+        margin-bottom: 2rem;
+    }
+    
+    /* Ensure carousel controls don't interfere with text */
+    .hero .carousel-controls {
+        top: 60%;
     }
 
     :root {
