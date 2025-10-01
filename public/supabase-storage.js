@@ -6,12 +6,17 @@ const STORAGE_BUCKET = 'gallery-images';
 // Initialize Supabase Storage client (will be set after supabase client is created)
 let supabaseStorage = null;
 
-// Wait for supabase client to be available
-if (typeof supabaseClient !== 'undefined') {
-    supabaseStorage = supabaseClient.storage.from(STORAGE_BUCKET);
-} else {
-    console.warn('Supabase client not yet available for storage');
+// Function to initialize storage client
+function initializeStorage() {
+    if (typeof window.supabaseClient !== 'undefined' && window.supabaseClient) {
+        supabaseStorage = window.supabaseClient.storage.from(STORAGE_BUCKET);
+        return true;
+    }
+    return false;
 }
+
+// Try to initialize immediately
+initializeStorage();
 
 /**
  * Upload an image to Supabase Storage
@@ -21,6 +26,11 @@ if (typeof supabaseClient !== 'undefined') {
  */
 async function uploadImage(file, customName = null) {
     try {
+        // Ensure storage client is initialized
+        if (!supabaseStorage && !initializeStorage()) {
+            throw new Error('Supabase Storage client not available');
+        }
+        
         // Generate filename if not provided
         const fileExt = file.name.split('.').pop();
         const fileName = customName || `${Date.now()}_${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
@@ -66,6 +76,11 @@ function getImageUrl(path) {
  */
 async function deleteImage(path) {
     try {
+        // Ensure storage client is initialized
+        if (!supabaseStorage && !initializeStorage()) {
+            throw new Error('Supabase Storage client not available');
+        }
+        
         const { data, error } = await supabaseStorage.remove([path]);
         
         if (error) {

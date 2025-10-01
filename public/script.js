@@ -661,6 +661,11 @@ function createFeaturedItem(item) {
     return div;
 }
 
+// Function to refresh featured items (can be called from admin panel)
+window.refreshFeaturedItems = function() {
+    loadFeaturedItems();
+};
+
 // Copy email function
 function copyEmail() {
     const emailAddress = document.getElementById('emailAddress').textContent;

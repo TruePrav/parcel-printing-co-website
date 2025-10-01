@@ -61,8 +61,18 @@ function loadImageManagement() {
     const imageGrid = document.getElementById('imageGrid');
     if (!imageGrid) return;
     
-    const savedImages = JSON.parse(localStorage.getItem('galleryImages')) || getDefaultImages();
-    renderImageGrid(savedImages);
+    // Get both saved images and default images
+    const savedImages = JSON.parse(localStorage.getItem('galleryImages')) || [];
+    const defaultImages = getDefaultImages();
+    
+    // Combine both arrays
+    const allImages = [...savedImages, ...defaultImages];
+    
+    console.log('Saved images:', savedImages.length);
+    console.log('Default images:', defaultImages.length);
+    console.log('Total images to display:', allImages.length);
+    
+    renderImageGrid(allImages);
 }
 
 function loadCarouselSettings() {
@@ -334,17 +344,67 @@ window.editImage = function(imageId) {
     });
 };
 
-window.deleteImage = function(imageId) {
-    if (confirm('Are you sure you want to delete this image?')) {
-        // Remove from localStorage
+window.deleteImage = async function(imageId) {
+    if (!confirm('Are you sure you want to delete this image? This will remove it from Supabase Storage permanently.')) {
+        return;
+    }
+    
+    try {
+        // Get the image details to find the filename
         const savedImages = JSON.parse(localStorage.getItem('galleryImages')) || [];
-        const updatedImages = savedImages.filter(img => img.id !== imageId);
+        const defaultImages = getDefaultImages();
+        const allImages = [...savedImages, ...defaultImages];
+        
+        const imageToDelete = allImages.find(img => img.id == imageId);
+        
+        if (!imageToDelete) {
+            showNotification('Image not found', 'error');
+            return;
+        }
+        
+        // Extract filename from Supabase URL
+        const filename = imageToDelete.src.split('/').pop();
+        
+        // Delete from Supabase Storage
+        try {
+            if (window.supabaseStorage && window.supabaseStorage.deleteImage) {
+                await window.supabaseStorage.deleteImage(filename);
+                showNotification('Image deleted from Supabase Storage', 'success');
+            } else {
+                showNotification('Warning: Could not delete from Supabase Storage (client not available)', 'warning');
+            }
+        } catch (storageError) {
+            showNotification('Warning: Failed to delete from Supabase Storage: ' + storageError.message, 'warning');
+            // Continue with local deletion even if storage fails
+        }
+        
+        // Remove from localStorage (for uploaded images)
+        const updatedImages = savedImages.filter(img => img.id != imageId);
         localStorage.setItem('galleryImages', JSON.stringify(updatedImages));
         
-        // Reload image grid
+        // Also remove from default images if it's a default image
+        // We can't modify the default images array, but we can mark it as deleted in localStorage
+        const deletedImages = JSON.parse(localStorage.getItem('deletedImages')) || [];
+        if (!deletedImages.includes(imageId)) {
+            deletedImages.push(imageId);
+            localStorage.setItem('deletedImages', JSON.stringify(deletedImages));
+        }
+        
+        // Reload image grid immediately
         loadImageManagement();
         
-        showNotification('Image deleted successfully', 'success');
+        // Refresh gallery and featured items on other pages
+        if (typeof window.refreshGallery === 'function') {
+            window.refreshGallery();
+        }
+        if (typeof window.refreshFeaturedItems === 'function') {
+            window.refreshFeaturedItems();
+        }
+        
+        showNotification('Image removed from gallery', 'success');
+    } catch (error) {
+        console.error('Error deleting image:', error);
+        showNotification('Error deleting image: ' + error.message, 'error');
     }
 };
 
@@ -357,7 +417,7 @@ function showNotification(message, type = 'info') {
         position: fixed;
         top: 20px;
         right: 20px;
-        background: ${type === 'success' ? '#4CAF50' : type === 'warning' ? '#ff9800' : '#2196F3'};
+        background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : type === 'warning' ? '#ff9800' : '#2196F3'};
         color: white;
         padding: 12px 20px;
         border-radius: 4px;
@@ -375,8 +435,12 @@ function showNotification(message, type = 'info') {
 }
 
 function getDefaultImages() {
+    // Get list of deleted image IDs
+    const deletedImages = JSON.parse(localStorage.getItem('deletedImages')) || [];
+    console.log('Deleted images:', deletedImages); // Debug log
+    
     // Default images based on the files in the gallery folder
-    return [
+    const allDefaultImages = [
         // Original numbered images (PNG files)
         { id: 1, src: 'https://xxcugztoedvvvfuzkkld.supabase.co/storage/v1/object/public/gallery-images/1.png', title: 'Hoodie Print Design', category: 'clothing' },
         { id: 2, src: 'https://xxcugztoedvvvfuzkkld.supabase.co/storage/v1/object/public/gallery-images/2.png', title: 'Denim Jacket Print', category: 'clothing' },
@@ -407,6 +471,13 @@ function getDefaultImages() {
         { id: 4388, src: 'https://xxcugztoedvvvfuzkkld.supabase.co/storage/v1/object/public/gallery-images/IMG_4388.jpeg', title: 'Custom Print Work 13', category: 'clothing' },
         { id: 4389, src: 'https://xxcugztoedvvvfuzkkld.supabase.co/storage/v1/object/public/gallery-images/IMG_4389.jpeg', title: 'Custom Print Work 14', category: 'clothing' }
     ];
+    
+    // Filter out deleted images
+    const filteredImages = allDefaultImages.filter(img => !deletedImages.includes(img.id));
+    console.log('Total default images:', allDefaultImages.length);
+    console.log('Filtered images count:', filteredImages.length);
+    console.log('Deleted images count:', deletedImages.length);
+    return filteredImages;
 }
 
 function renderImageGrid(images) {

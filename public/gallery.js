@@ -52,15 +52,25 @@ document.addEventListener('DOMContentLoaded', function() {
     
     let currentFilter = 'all';
     let currentImageIndex = 0;
-    let filteredImages = [...galleryData];
+    let filteredImages = [];
     
     // Initialize gallery
     initGallery();
     
     function initGallery() {
+        // Filter out deleted images before initializing
+        filterOutDeletedImages();
         renderGallery();
         setupFilters();
         setupModal();
+    }
+    
+    function filterOutDeletedImages() {
+        // Get list of deleted image IDs
+        const deletedImages = JSON.parse(localStorage.getItem('deletedImages')) || [];
+        
+        // Filter out deleted images from gallery data
+        filteredImages = galleryData.filter(img => !deletedImages.includes(img.id));
     }
     
     function renderGallery() {
@@ -117,10 +127,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 const filter = btn.getAttribute('data-filter');
                 currentFilter = filter;
                 
+                // First filter out deleted images, then apply category filter
+                const deletedImages = JSON.parse(localStorage.getItem('deletedImages')) || [];
+                const availableImages = galleryData.filter(img => !deletedImages.includes(img.id));
+                
                 if (filter === 'all') {
-                    filteredImages = [...galleryData];
+                    filteredImages = [...availableImages];
                 } else {
-                    filteredImages = galleryData.filter(img => img.category === filter);
+                    filteredImages = availableImages.filter(img => img.category === filter);
                 }
                 
                 renderGallery();
@@ -369,14 +383,30 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Function to get featured items (top 9 bestsellers)
     function getFeaturedItems() {
+        // Get list of deleted image IDs
+        const deletedImages = JSON.parse(localStorage.getItem('deletedImages')) || [];
+        
         return galleryData
+            .filter(item => !deletedImages.includes(item.id)) // Filter out deleted images
             .filter(item => item.isBestseller)
             .sort((a, b) => b.sales - a.sales)
             .slice(0, 9);
     }
     
+    // Function to get filtered gallery data (excluding deleted images)
+    function getFilteredGalleryData() {
+        const deletedImages = JSON.parse(localStorage.getItem('deletedImages')) || [];
+        return galleryData.filter(item => !deletedImages.includes(item.id));
+    }
+    
+    // Function to refresh gallery (can be called from admin panel)
+    window.refreshGallery = function() {
+        filterOutDeletedImages();
+        renderGallery();
+    };
+    
     // Export functions for use in other files
-    window.galleryData = galleryData;
+    window.galleryData = getFilteredGalleryData(); // Use filtered data
     window.getFeaturedItems = getFeaturedItems;
     window.getCategoryName = getCategoryName;
     

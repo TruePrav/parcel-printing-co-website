@@ -13,6 +13,9 @@ const SUPABASE_ANON_KEY = window.SUPABASE_CONFIG?.anonKey || 'YOUR_SUPABASE_ANON
 const { createClient } = supabase;
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// Make supabaseClient globally available
+window.supabaseClient = supabaseClient;
+
 // Authentication state
 let isAuthenticated = false;
 let currentUser = null;
