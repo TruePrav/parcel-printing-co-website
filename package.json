@@ -1,0 +1,22 @@
+{
+  "name": "parcel-print-co",
+  "version": "1.0.0",
+  "description": "Premium print shop website for Parcel Print Co.",
+  "main": "index.html",
+  "scripts": {
+    "build": "node build-with-env.js",
+    "dev": "python -m http.server 8000",
+    "start": "python -m http.server 8000"
+  },
+  "keywords": [
+    "print",
+    "clothing",
+    "website",
+    "static"
+  ],
+  "author": "Parcel Print Co.",
+  "license": "MIT",
+  "devDependencies": {
+    "dotenv": "^16.6.1"
+  }
+}
