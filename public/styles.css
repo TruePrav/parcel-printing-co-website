@@ -306,43 +306,12 @@ p {
 }
 
 .hero .carousel-controls {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    transform: translateY(-50%);
-    display: flex;
-    justify-content: space-between;
-    padding: 0 2rem;
-    z-index: 10;
-    pointer-events: none;
+    display: none;
 }
 
 .hero .carousel-prev,
 .hero .carousel-next {
-    background: rgba(44, 44, 44, 0.8);
-    color: white;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    font-size: 1.8rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all var(--transition-smooth);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: auto;
-    backdrop-filter: blur(5px);
-    z-index: 5;
-}
-
-.hero .carousel-prev:hover,
-.hero .carousel-next:hover {
-    background: rgba(45, 80, 22, 0.9);
-    border-color: rgba(255, 255, 255, 0.6);
-    transform: scale(1.1);
+    display: none;
 }
 
 .hero .carousel-indicators {
@@ -1284,13 +1253,14 @@ section {
         transition: left 0.3s ease !important;
         box-shadow: 0 10px 27px rgba(44, 44, 44, 0.1) !important;
         backdrop-filter: blur(10px) !important;
-        padding: 2rem 0 !important;
+        padding: 2rem 0 4rem 0 !important;
         z-index: 9998 !important;
         height: calc(100vh - 80px) !important;
         overflow-y: auto !important;
         display: none !important;
         visibility: hidden !important;
         opacity: 0 !important;
+        -webkit-overflow-scrolling: touch !important;
     }
 
     .nav-menu.active {
@@ -2639,26 +2609,7 @@ textarea:focus {
 
 /* Responsive adjustments for new features */
 @media (max-width: 768px) {
-    .carousel-controls {
-        padding: 0 1rem;
-    }
-    
-    .hero .carousel-prev,
-    .hero .carousel-next {
-        width: 40px;
-        height: 40px;
-        font-size: 1.2rem;
-        top: 45%;
-        z-index: 5;
-    }
-    
-    .hero .carousel-prev {
-        left: 1rem;
-    }
-    
-    .hero .carousel-next {
-        right: 1rem;
-    }
+    /* Carousel arrows are hidden on all devices */
     
     .gallery-grid {
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
