@@ -335,6 +335,7 @@ p {
     justify-content: center;
     pointer-events: auto;
     backdrop-filter: blur(5px);
+    z-index: 5;
 }
 
 .hero .carousel-prev:hover,
@@ -1243,10 +1244,22 @@ section {
         min-height: 44px;
         justify-content: center;
         align-items: center;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
     }
     
     .hamburger:hover {
         background-color: rgba(44, 44, 44, 0.1);
+    }
+    
+    .hamburger:active {
+        background-color: rgba(44, 44, 44, 0.2);
+        transform: scale(0.95);
     }
     
     .bar {
@@ -1275,11 +1288,16 @@ section {
         z-index: 9998 !important;
         height: calc(100vh - 80px) !important;
         overflow-y: auto !important;
-        display: flex !important;
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
     }
 
     .nav-menu.active {
         left: 0 !important;
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
     
     .nav-menu li {
@@ -2627,9 +2645,19 @@ textarea:focus {
     
     .hero .carousel-prev,
     .hero .carousel-next {
-        width: 50px;
-        height: 50px;
-        font-size: 1.4rem;
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+        top: 45%;
+        z-index: 5;
+    }
+    
+    .hero .carousel-prev {
+        left: 1rem;
+    }
+    
+    .hero .carousel-next {
+        right: 1rem;
     }
     
     .gallery-grid {

@@ -15,36 +15,48 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        console.log('Initializing mobile menu...');
+        console.log('Initializing mobile menu...', { hamburger, navMenu });
         
         // Remove any existing event listeners
-        hamburger.removeEventListener('click', toggleMobileMenu);
+        const newHamburger = hamburger.cloneNode(true);
+        hamburger.parentNode.replaceChild(newHamburger, hamburger);
         
-        // Add the event listener
-        hamburger.addEventListener('click', toggleMobileMenu);
+        // Add the event listener to the new element
+        newHamburger.addEventListener('click', toggleMobileMenu);
+        newHamburger.addEventListener('touchstart', toggleMobileMenu);
         
         function toggleMobileMenu(e) {
             e.preventDefault();
             e.stopPropagation();
             
-            console.log('Hamburger clicked!');
+            console.log('Hamburger clicked!', e.type);
             
-            const isActive = navMenu.classList.contains('active');
+            const hamburgerEl = document.querySelector('.hamburger');
+            const navMenuEl = document.querySelector('.nav-menu');
             
-            hamburger.classList.toggle('active');
-            navMenu.classList.toggle('active');
+            if (!hamburgerEl || !navMenuEl) {
+                console.error('Elements not found during toggle');
+                return;
+            }
+            
+            const isActive = navMenuEl.classList.contains('active');
+            
+            hamburgerEl.classList.toggle('active');
+            navMenuEl.classList.toggle('active');
             
             // Prevent body scroll when menu is open
             if (!isActive) {
                 document.body.style.overflow = 'hidden';
-                navMenu.style.left = '0px';
-                navMenu.style.visibility = 'visible';
-                navMenu.style.opacity = '1';
+                navMenuEl.style.left = '0px';
+                navMenuEl.style.visibility = 'visible';
+                navMenuEl.style.opacity = '1';
+                navMenuEl.style.display = 'flex';
             } else {
                 document.body.style.overflow = '';
-                navMenu.style.left = '-100%';
-                navMenu.style.visibility = 'hidden';
-                navMenu.style.opacity = '0';
+                navMenuEl.style.left = '-100%';
+                navMenuEl.style.visibility = 'hidden';
+                navMenuEl.style.opacity = '0';
+                navMenuEl.style.display = 'none';
             }
             
             console.log('Menu toggled. Active:', !isActive);
@@ -56,6 +68,41 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Also try to initialize after a short delay in case DOM isn't ready
     setTimeout(initMobileMenu, 100);
+    setTimeout(initMobileMenu, 500);
+    
+    // Alternative mobile menu approach - direct event delegation
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.hamburger')) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const hamburger = e.target.closest('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            if (!navMenu) return;
+            
+            const isActive = navMenu.classList.contains('active');
+            
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+            
+            if (!isActive) {
+                document.body.style.overflow = 'hidden';
+                navMenu.style.left = '0px';
+                navMenu.style.visibility = 'visible';
+                navMenu.style.opacity = '1';
+                navMenu.style.display = 'flex';
+            } else {
+                document.body.style.overflow = '';
+                navMenu.style.left = '-100%';
+                navMenu.style.visibility = 'hidden';
+                navMenu.style.opacity = '0';
+                navMenu.style.display = 'none';
+            }
+            
+            console.log('Alternative menu toggle - Active:', !isActive);
+        }
+    });
     
     // Close mobile menu when clicking on a link
     document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
