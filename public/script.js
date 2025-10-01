@@ -5,41 +5,100 @@ document.addEventListener('DOMContentLoaded', function() {
     // Carousel functionality
     initCarousel();
     
-    // Mobile Navigation Toggle
-    const hamburger = document.querySelector('.hamburger');
-    const navMenu = document.querySelector('.nav-menu');
-    
-    console.log('Hamburger element:', hamburger);
-    console.log('Nav menu element:', navMenu);
-    
-    if (hamburger && navMenu) {
-        hamburger.addEventListener('click', function() {
+    // Mobile Navigation Toggle - More robust approach
+    function initMobileMenu() {
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        if (!hamburger || !navMenu) {
+            console.error('Mobile menu elements not found');
+            return;
+        }
+        
+        console.log('Initializing mobile menu...');
+        
+        // Remove any existing event listeners
+        hamburger.removeEventListener('click', toggleMobileMenu);
+        
+        // Add the event listener
+        hamburger.addEventListener('click', toggleMobileMenu);
+        
+        function toggleMobileMenu(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
             console.log('Hamburger clicked!');
+            
+            const isActive = navMenu.classList.contains('active');
+            
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
-            console.log('Hamburger classes:', hamburger.className);
-            console.log('Nav menu classes:', navMenu.className);
-        });
-    } else {
-        console.error('Hamburger or nav menu not found!');
-        console.log('Hamburger:', hamburger);
-        console.log('Nav menu:', navMenu);
+            
+            // Prevent body scroll when menu is open
+            if (!isActive) {
+                document.body.style.overflow = 'hidden';
+                navMenu.style.left = '0px';
+                navMenu.style.visibility = 'visible';
+                navMenu.style.opacity = '1';
+            } else {
+                document.body.style.overflow = '';
+                navMenu.style.left = '-100%';
+                navMenu.style.visibility = 'hidden';
+                navMenu.style.opacity = '0';
+            }
+            
+            console.log('Menu toggled. Active:', !isActive);
+        }
     }
+    
+    // Initialize mobile menu
+    initMobileMenu();
+    
+    // Also try to initialize after a short delay in case DOM isn't ready
+    setTimeout(initMobileMenu, 100);
     
     // Close mobile menu when clicking on a link
     document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
         if (hamburger && navMenu) {
             hamburger.classList.remove('active');
             navMenu.classList.remove('active');
+            document.body.style.overflow = '';
+            navMenu.style.left = '-100%';
+            navMenu.style.visibility = 'hidden';
+            navMenu.style.opacity = '0';
         }
     }));
     
     // Close mobile menu when clicking outside
     document.addEventListener('click', function(event) {
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
         if (hamburger && navMenu && navMenu.classList.contains('active')) {
             if (!hamburger.contains(event.target) && !navMenu.contains(event.target)) {
                 hamburger.classList.remove('active');
                 navMenu.classList.remove('active');
+                document.body.style.overflow = '';
+                navMenu.style.left = '-100%';
+                navMenu.style.visibility = 'hidden';
+                navMenu.style.opacity = '0';
+            }
+        }
+    });
+    
+    // Close mobile menu on escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            if (hamburger && navMenu && navMenu.classList.contains('active')) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+                document.body.style.overflow = '';
+                navMenu.style.left = '-100%';
+                navMenu.style.visibility = 'hidden';
+                navMenu.style.opacity = '0';
             }
         }
     });

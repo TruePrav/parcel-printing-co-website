@@ -2,16 +2,49 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     
-    // Mobile Navigation Toggle
-    const hamburger = document.querySelector('.hamburger');
-    const navMenu = document.querySelector('.nav-menu');
-    
-    if (hamburger && navMenu) {
-        hamburger.addEventListener('click', function() {
+    // Mobile Navigation Toggle - More robust approach
+    function initMobileMenu() {
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        if (!hamburger || !navMenu) {
+            console.error('Mobile menu elements not found');
+            return;
+        }
+        
+        // Remove any existing event listeners
+        hamburger.removeEventListener('click', toggleMobileMenu);
+        
+        // Add the event listener
+        hamburger.addEventListener('click', toggleMobileMenu);
+        
+        function toggleMobileMenu(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const isActive = navMenu.classList.contains('active');
+            
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
-        });
+            
+            // Force styles to ensure visibility
+            if (!isActive) {
+                navMenu.style.left = '0px';
+                navMenu.style.visibility = 'visible';
+                navMenu.style.opacity = '1';
+            } else {
+                navMenu.style.left = '-100%';
+                navMenu.style.visibility = 'hidden';
+                navMenu.style.opacity = '0';
+            }
+        }
     }
+    
+    // Initialize mobile menu
+    initMobileMenu();
+    
+    // Also try to initialize after a short delay in case DOM isn't ready
+    setTimeout(initMobileMenu, 100);
     
     // Close mobile menu when clicking on a link
     document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
