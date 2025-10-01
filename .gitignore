@@ -3,10 +3,21 @@
 .env.production
 .env
 
-# Setup and Configuration Files
+# Documentation and Setup Files
+*.md
+README.md
 ENVIRONMENT_SETUP.md
 SUPABASE_SETUP.md
 SUPABASE_STORAGE_SETUP.md
+
+# Local image backups (using Supabase URLs)
+gallery/
+*.png
+*.jpeg
+*.jpg
+*.gif
+*.webp
+*.svg
 
 # Dependencies
 node_modules/
