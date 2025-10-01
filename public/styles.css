@@ -43,7 +43,7 @@ body {
     color: var(--charcoal);
     background-color: var(--primary-cream);
     overflow-x: hidden;
-    padding-top: 80px; /* Account for fixed navbar */
+    padding-top: 60px; /* Account for fixed navbar */
 }
 
 .container {
@@ -167,7 +167,7 @@ p {
 .nav-logo {
     display: flex;
     align-items: center;
-    height: 80px;
+    height: 60px;
     padding-top: 0;
 }
 
@@ -1183,7 +1183,7 @@ section {
 @media (max-width: 768px) {
     /* Adjust body padding for mobile navbar */
     body {
-        padding-top: 70px;
+        padding-top: 60px;
     }
     
     /* Ensure navbar is visible on mobile */
@@ -1198,12 +1198,12 @@ section {
     }
     
     .nav-logo {
-        height: 70px;
+        height: 60px;
     }
     
     .logo-img {
-        height: 50px;
-        max-width: 150px;
+        height: 40px;
+        max-width: 120px;
         filter: brightness(0.2) contrast(2); /* Ensure logo is visible */
     }
     
@@ -1222,7 +1222,7 @@ section {
     .nav-menu {
         position: fixed;
         left: -100%;
-        top: 70px;
+        top: 60px;
         flex-direction: column;
         background-color: rgba(250, 248, 245, 0.98);
         width: 100%;
@@ -1305,7 +1305,7 @@ section {
 @media (max-width: 480px) {
     /* Adjust body padding for smaller mobile navbar */
     body {
-        padding-top: 70px;
+        padding-top: 60px;
     }
     
     .container {
